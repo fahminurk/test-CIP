@@ -5,7 +5,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log(req.query);
   const { id_supplier } = req.query;
 
   if (req.method == "PATCH") {
