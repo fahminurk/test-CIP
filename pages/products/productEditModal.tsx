@@ -27,31 +27,33 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useAddProductMutation } from "@/action/useProducts";
 import { useSupplierQuery } from "@/action/useSuppliers";
+import { ProductEditModalProps } from "@/types";
+import { editProductSchema } from "@/helper/schema";
+import { useEditProductMutation } from "@/action/useProducts";
 
-const productFormSchema = z.object({
-  nama: z.string().min(2, { message: "reqired" }).max(50),
-  deskripsi: z.string().min(2, { message: "required" }).max(50),
-  harga: z.string().min(1, { message: "required" }).max(1000000),
-  stok: z.string().min(1, { message: "required" }).max(100),
-  suplier: z.string().min(1, { message: "required" }),
-});
-
-const ProductForm = () => {
+const ProductEditModal: React.FC<ProductEditModalProps> = ({
+  id,
+  nama,
+  deskripsi,
+  harga,
+  stok,
+  suplier,
+  foto,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { mutateAsync, isPending } = useAddProductMutation();
+  const { mutateAsync, isPending } = useEditProductMutation();
   const { data: suppliers } = useSupplierQuery();
 
-  const form = useForm<z.infer<typeof productFormSchema>>({
-    resolver: zodResolver(productFormSchema),
+  const form = useForm<z.infer<typeof editProductSchema>>({
+    resolver: zodResolver(editProductSchema),
     defaultValues: {
-      nama: "",
-      deskripsi: "",
-      harga: "",
-      stok: "",
-      suplier: "",
+      nama,
+      deskripsi,
+      harga: harga.toString(),
+      stok: stok.toString(),
+      suplier: suplier.id_suplier.toString(),
     },
   });
 
@@ -70,9 +72,9 @@ const ProductForm = () => {
     }
   };
 
-  async function onSubmit(values: z.infer<typeof productFormSchema>) {
+  async function onSubmit(values: z.infer<typeof editProductSchema>) {
     try {
-      if (!selectedFile) {
+      if (!selectedFile && !foto) {
         return toast.error("Please select a file");
       }
       const formData = new FormData();
@@ -81,9 +83,11 @@ const ProductForm = () => {
       formData.append("harga", values.harga);
       formData.append("stok", values.stok);
       formData.append("suplier", values.suplier);
-      formData.append("file", selectedFile as Blob);
+      if (selectedFile) {
+        formData.append("file", selectedFile as Blob);
+      }
 
-      await mutateAsync(formData);
+      await mutateAsync({ formData, id });
       form.reset();
       setOpen(false);
     } catch (error) {
@@ -94,17 +98,13 @@ const ProductForm = () => {
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
-        <Button
-          className="w-full"
-          variant={"outline"}
-          onClick={() => setOpen(!open)}
-        >
-          Add Product
+        <Button size={"sm"} onClick={() => setOpen(!open)}>
+          Edit
         </Button>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="mb-5 text-xl font-bold">
-              ADD PRODUCTS
+              EDIT PRODUCTS
             </DialogTitle>
             <Form {...form}>
               <form
@@ -171,7 +171,7 @@ const ProductForm = () => {
                       <FormLabel>suplier</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={field.value.toString()}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -193,27 +193,6 @@ const ProductForm = () => {
                     </FormItem>
                   )}
                 />
-                {/* <FormField
-                  control={form.control}
-                  name="foto"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>foto</FormLabel>
-                      <FormControl>
-                        <Input
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.files ? e.target.files[0] : null
-                            )
-                          }
-                          type="file"
-                          accept="image/*"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
                 <Input
                   onChange={handleInputProfilePictureChange}
                   type="file"
@@ -231,4 +210,4 @@ const ProductForm = () => {
   );
 };
 
-export default ProductForm;
+export default ProductEditModal;
