@@ -8,22 +8,28 @@ export default async function handler(
   const { id_supplier } = req.query;
 
   if (req.method == "PATCH") {
-    const supplier = await prisma.suplier.update({
-      where: {
-        id_suplier: Number(id_supplier),
-      },
-      data: {
-        ...req.body,
-      },
-    });
+    try {
+      const supplier = await prisma.suplier.update({
+        where: { id_suplier: Number(id_supplier) },
+        data: { ...req.body },
+      });
 
-    return res.status(200).send(supplier);
+      return res.status(200).send(supplier);
+    } catch (error) {
+      return res
+        .status(500)
+        .send({ message: "Internal Server Error", error: error });
+    }
   } else if (req.method == "DELETE") {
-    const supplier = await prisma.suplier.delete({
-      where: {
-        id_suplier: Number(id_supplier),
-      },
-    });
-    return res.status(200).send(supplier);
+    try {
+      const supplier = await prisma.suplier.delete({
+        where: { id_suplier: Number(id_supplier) },
+      });
+      return res.status(200).send(supplier);
+    } catch (error) {
+      return res
+        .status(500)
+        .send({ message: "Internal Server Error", error: error });
+    }
   }
 }
