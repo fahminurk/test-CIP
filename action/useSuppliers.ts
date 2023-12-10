@@ -23,7 +23,7 @@ export const useAddSupplierMutation = () => {
       alamat: string;
       email: string;
     }) => {
-      return api.post("/suppliers/create", data);
+      return api.post("/suppliers/post", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["suppliers"] });
