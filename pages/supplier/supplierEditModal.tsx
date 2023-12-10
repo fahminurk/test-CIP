@@ -1,0 +1,134 @@
+import React, { useState } from "react";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import { Input } from "@/components/ui/input";
+import { useEditSupplierMutation } from "@/action/useSuppliers";
+
+const formSchema = z.object({
+  nama_suplier: z.string().min(2).max(50),
+  alamat: z.string().min(2).max(50),
+  email: z.string().email(),
+});
+
+interface SupplierProps {
+  id_suplier: number;
+  nama_suplier: string;
+  alamat: string;
+  email: string;
+}
+
+const SupplierEditModal: React.FC<SupplierProps> = ({
+  id_suplier,
+  nama_suplier,
+  alamat,
+  email,
+}) => {
+  const { mutateAsync, isPending } = useEditSupplierMutation();
+  const [open, setOpen] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      nama_suplier,
+      alamat,
+      email,
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await mutateAsync({ values, id_suplier });
+      form.reset();
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button size={"sm"} onClick={() => setOpen(!open)}>
+        Edit
+      </Button>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="mb-5 text-xl font-bold">
+            EDIT SUPPLIER
+          </DialogTitle>
+          <DialogDescription>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
+                <FormField
+                  control={form.control}
+                  name="nama_suplier"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>nama supplier</FormLabel>
+                      <FormControl>
+                        <Input placeholder="nama" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="alamat"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>alamat</FormLabel>
+                      <FormControl>
+                        <Input placeholder="alamat" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="email" type="email" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={isPending}>
+                    Confirm
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default SupplierEditModal;

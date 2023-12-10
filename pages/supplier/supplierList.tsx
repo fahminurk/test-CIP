@@ -1,5 +1,5 @@
-import { useSupplierQuery } from "@/action/useSuppliers";
 import SupplierCard from "./supplierCard";
+import { useSupplierQuery } from "@/action/useSuppliers";
 
 const SupplierList = () => {
   const { data } = useSupplierQuery();

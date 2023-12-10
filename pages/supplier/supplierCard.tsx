@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import React from "react";
 import SupplierDeleteModal from "./supplierDeleteModal";
+import SupplierEditModal from "./supplierEditModal";
 
 interface SupplierCardProps {
   id_suplier: number;
@@ -18,7 +18,7 @@ const SupplierCard: React.FC<SupplierCardProps> = ({
   return (
     <div
       key={id_suplier}
-      className="p-2 rounded-lg border border-black flex flex-col gap-2"
+      className="p-2 rounded-lg border shadow-md flex flex-col gap-2"
     >
       <div className="flex">
         <div className="font-bold">
@@ -38,7 +38,12 @@ const SupplierCard: React.FC<SupplierCardProps> = ({
         </div>
       </div>
       <div className="flex justify-end gap-1">
-        <Button size={"sm"}>Edit</Button>
+        <SupplierEditModal
+          id_suplier={id_suplier}
+          nama_suplier={nama_suplier}
+          alamat={alamat}
+          email={email}
+        />
         <SupplierDeleteModal id_suplier={id_suplier} />
       </div>
     </div>
