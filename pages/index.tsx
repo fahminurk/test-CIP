@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductForm from "./products/productForm";
 import SupplierForm from "./supplier/supplierForm";
 import SupplierList from "./supplier/supplierList";
+import ProductList from "./products/productList";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         </TabsList>
         <TabsContent value="products">
           <ProductForm />
+          <ProductList />
         </TabsContent>
         <TabsContent value="supplier">
           <SupplierForm />
