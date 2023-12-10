@@ -17,18 +17,24 @@ const handler = async (
   const file = req.file;
   const others = req.body;
 
-  const product = await prisma.produk.create({
-    data: {
-      nama: others.nama,
-      deskripsi: others.deskripsi,
-      harga: Number(others.harga),
-      stok: Number(others.stok),
-      foto: file.filename,
-      suplier_id: Number(others.suplier),
-    },
-  });
+  try {
+    const product = await prisma.produk.create({
+      data: {
+        nama: others.nama,
+        deskripsi: others.deskripsi,
+        harga: Number(others.harga),
+        stok: Number(others.stok),
+        foto: file.filename,
+        suplier_id: Number(others.suplier),
+      },
+    });
 
-  res.status(200).send(product);
+    res.status(200).send(product);
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: "Internal Server Error", error: error });
+  }
 };
 
 export default handler;

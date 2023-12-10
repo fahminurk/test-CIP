@@ -21,12 +21,9 @@ export default async function handler(
 
     const file = req.file;
     const others = req.body;
-    console.log(file);
 
     const checkProduct = await prisma.produk.findUnique({
-      where: {
-        id: Number(id),
-      },
+      where: { id: Number(id) },
     });
 
     if (checkProduct?.foto && file) {
@@ -51,18 +48,14 @@ export default async function handler(
 
     return res.status(200).send(product);
   } else if (req.method == "DELETE") {
-    const supplier = await prisma.produk.delete({
-      where: {
-        id: Number(id),
-      },
-    });
+    const supplier = await prisma.produk.delete({ where: { id: Number(id) } });
 
-    try {
-      if (supplier.foto) {
+    if (supplier.foto) {
+      try {
         fs.unlink(path.join("./public/uploads/products", supplier.foto));
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
     return res.status(200).send(supplier);
   }
