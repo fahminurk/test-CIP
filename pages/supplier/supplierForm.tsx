@@ -21,18 +21,13 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { useAddSupplierMutation } from "@/action/useSuppliers";
-
-const formSchema = z.object({
-  nama_suplier: z.string().min(2).max(50),
-  alamat: z.string().min(2).max(50),
-  email: z.string().email(),
-});
+import { addSupplierSchema } from "@/helper/schema";
 
 const SupplierForm = () => {
   const { mutateAsync, isPending } = useAddSupplierMutation();
   const [open, setOpen] = useState(false);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof addSupplierSchema>>({
+    resolver: zodResolver(addSupplierSchema),
     defaultValues: {
       nama_suplier: "",
       alamat: "",
@@ -40,7 +35,7 @@ const SupplierForm = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof addSupplierSchema>) {
     try {
       await mutateAsync(values);
       form.reset();
@@ -51,7 +46,11 @@ const SupplierForm = () => {
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button className="w-full" onClick={() => setOpen(!open)}>
+      <Button
+        className="w-full"
+        variant={"outline"}
+        onClick={() => setOpen(!open)}
+      >
         Add Supplier
       </Button>
       <DialogContent>
@@ -104,9 +103,11 @@ const SupplierForm = () => {
                     </FormItem>
                   )}
                 />
-                <Button variant={"outline"} type="submit" disabled={!isPending}>
-                  Submit
-                </Button>
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={isPending}>
+                    Submit
+                  </Button>
+                </div>
               </form>
             </Form>
           </DialogDescription>

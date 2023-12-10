@@ -21,21 +21,10 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { useEditSupplierMutation } from "@/action/useSuppliers";
+import { SupplierEditProps } from "@/types";
+import { editSupplierSchema } from "@/helper/schema";
 
-const formSchema = z.object({
-  nama_suplier: z.string().min(2).max(50),
-  alamat: z.string().min(2).max(50),
-  email: z.string().email(),
-});
-
-interface SupplierProps {
-  id_suplier: number;
-  nama_suplier: string;
-  alamat: string;
-  email: string;
-}
-
-const SupplierEditModal: React.FC<SupplierProps> = ({
+const SupplierEditModal: React.FC<SupplierEditProps> = ({
   id_suplier,
   nama_suplier,
   alamat,
@@ -44,8 +33,8 @@ const SupplierEditModal: React.FC<SupplierProps> = ({
   const { mutateAsync, isPending } = useEditSupplierMutation();
   const [open, setOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof editSupplierSchema>>({
+    resolver: zodResolver(editSupplierSchema),
     defaultValues: {
       nama_suplier,
       alamat,
@@ -53,7 +42,7 @@ const SupplierEditModal: React.FC<SupplierProps> = ({
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof editSupplierSchema>) {
     try {
       await mutateAsync({ values, id_suplier });
       form.reset();

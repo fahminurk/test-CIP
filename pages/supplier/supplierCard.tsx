@@ -1,13 +1,7 @@
 import React from "react";
 import SupplierDeleteModal from "./supplierDeleteModal";
 import SupplierEditModal from "./supplierEditModal";
-
-interface SupplierCardProps {
-  id_suplier: number;
-  nama_suplier: string;
-  alamat: string;
-  email: string;
-}
+import { SupplierCardProps } from "@/types";
 
 const SupplierCard: React.FC<SupplierCardProps> = ({
   id_suplier,

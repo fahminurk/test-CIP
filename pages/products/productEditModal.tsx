@@ -198,9 +198,11 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
                   type="file"
                   accept="image/png, image/jpeg, image/jpg"
                 />
-                <Button variant={"outline"} type="submit" disabled={isPending}>
-                  Submit
-                </Button>
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={isPending}>
+                    Submit
+                  </Button>
+                </div>
               </form>
             </Form>
           </DialogHeader>

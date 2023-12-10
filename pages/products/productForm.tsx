@@ -29,14 +29,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useAddProductMutation } from "@/action/useProducts";
 import { useSupplierQuery } from "@/action/useSuppliers";
-
-const productFormSchema = z.object({
-  nama: z.string().min(2, { message: "reqired" }).max(50),
-  deskripsi: z.string().min(2, { message: "required" }).max(50),
-  harga: z.string().min(1, { message: "required" }).max(1000000),
-  stok: z.string().min(1, { message: "required" }).max(100),
-  suplier: z.string().min(1, { message: "required" }),
-});
+import { addProductSchema } from "@/helper/schema";
 
 const ProductForm = () => {
   const [open, setOpen] = React.useState(false);
@@ -44,8 +37,8 @@ const ProductForm = () => {
   const { mutateAsync, isPending } = useAddProductMutation();
   const { data: suppliers } = useSupplierQuery();
 
-  const form = useForm<z.infer<typeof productFormSchema>>({
-    resolver: zodResolver(productFormSchema),
+  const form = useForm<z.infer<typeof addProductSchema>>({
+    resolver: zodResolver(addProductSchema),
     defaultValues: {
       nama: "",
       deskripsi: "",
@@ -70,7 +63,7 @@ const ProductForm = () => {
     }
   };
 
-  async function onSubmit(values: z.infer<typeof productFormSchema>) {
+  async function onSubmit(values: z.infer<typeof addProductSchema>) {
     try {
       if (!selectedFile) {
         return toast.error("Please select a file");
@@ -95,7 +88,7 @@ const ProductForm = () => {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <Button
-          className="w-full"
+          className="w-full bg-white"
           variant={"outline"}
           onClick={() => setOpen(!open)}
         >
@@ -193,35 +186,17 @@ const ProductForm = () => {
                     </FormItem>
                   )}
                 />
-                {/* <FormField
-                  control={form.control}
-                  name="foto"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>foto</FormLabel>
-                      <FormControl>
-                        <Input
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.files ? e.target.files[0] : null
-                            )
-                          }
-                          type="file"
-                          accept="image/*"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
                 <Input
                   onChange={handleInputProfilePictureChange}
                   type="file"
                   accept="image/png, image/jpeg, image/jpg"
+                  className=""
                 />
-                <Button variant={"outline"} type="submit" disabled={isPending}>
-                  Submit
-                </Button>
+                <div className="flex justify-end">
+                  <Button type="submit" disabled={isPending}>
+                    Submit
+                  </Button>
+                </div>
               </form>
             </Form>
           </DialogHeader>
