@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { suplier } from "@prisma/client";
+import { ProductWithSupplier } from "@/types";
 import {
   UseQueryResult,
   useMutation,
@@ -7,17 +7,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-
-export type ProductWithSupplier = {
-  id: number;
-  nama: string;
-  deskripsi: string;
-  harga: number;
-  stok: number;
-  foto: string;
-  suplier_id: number;
-  suplier: suplier;
-};
 
 export const useProductsQuery = (): UseQueryResult<
   ProductWithSupplier[],
