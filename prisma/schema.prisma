@@ -25,6 +25,6 @@ model produk {
   harga Int
   stok Int
   foto String
-  suplier_id Int @unique
-  suplier suplier @relation(fields: [suplier_id], references: [id_suplier])
+  suplier_id Int 
+  suplier suplier @relation(fields: [suplier_id], references: [id_suplier], onDelete: Cascade)
 }
