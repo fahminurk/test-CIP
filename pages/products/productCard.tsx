@@ -48,9 +48,9 @@ const ProductCard: React.FC<ProductWithSupplier> = ({
             <p className="border-b">{deskripsi}</p>
             <p className="border-b">{harga}</p>
             <p className="border-b">{stok}</p>
-            <p className="border-b">{suplier.nama_suplier}</p>
-            <p className="border-b">{suplier.email}</p>
-            <p className="border-b">{suplier.alamat}</p>
+            <p className="border-b">{suplier?.nama_suplier}</p>
+            <p className="border-b">{suplier?.email}</p>
+            <p className="border-b">{suplier?.alamat}</p>
           </div>
         </div>
       </div>
