@@ -51,9 +51,9 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
     defaultValues: {
       nama,
       deskripsi,
-      harga: harga.toString(),
-      stok: stok.toString(),
-      suplier: suplier.id_suplier.toString(),
+      harga: String(harga),
+      stok: String(stok),
+      suplier: String(suplier?.id_suplier),
     },
   });
 
@@ -89,6 +89,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
 
       await mutateAsync({ formData, id });
       form.reset();
+      setSelectedFile(null);
       setOpen(false);
     } catch (error) {
       console.log(error);
@@ -171,7 +172,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
                       <FormLabel>suplier</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value.toString()}
+                        defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -182,7 +183,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
                           {suppliers?.map((item) => (
                             <SelectItem
                               key={item.id_suplier}
-                              value={item.id_suplier.toString()}
+                              value={String(item.id_suplier)}
                             >
                               {item.nama_suplier}
                             </SelectItem>
